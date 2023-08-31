@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define NUM_NON_TERMINALS 3
+#define NUM_TERMINALS 4
+
+enum NonTerminal {
+    E, T, F
+};
+
+enum Terminal {
+    PLUS, TIMES, LPAREN, RPAREN, ID, END
+};
+
+// Predictive Parsing Table
+int parsingTable[NUM_NON_TERMINALS][NUM_TERMINALS];
+
+void initializeParsingTable() {
+    // Initialize parsing table with -1 indicating error
+    for (int i = 0; i < NUM_NON_TERMINALS; i++) {
+        for (int j = 0; j < NUM_TERMINALS; j++) {
+            parsingTable[i][j] = -1;
+        }
+    }
+
+    // Fill in the parsing table with production rules
+    parsingTable[E][ID] = 0;
+    parsingTable[E][LPAREN] = 0;
+    parsingTable[T][ID] = 1;
+    parsingTable[T][LPAREN] = 1;
+    parsingTable[F][ID] = 2;
+    parsingTable[F][LPAREN] = 3;
+}
+
+int main() {
+    initializeParsingTable();
+
+    // Display the predictive parsing table
+    printf("Predictive Parsing Table:\n");
+    printf("NonTerminal\tPLUS\tTIMES\tLPAREN\tRPAREN\tID\tEND\n");
+
+    for (int i = 0; i < NUM_NON_TERMINALS; i++) {
+        printf("%c\t\t", 'E' + i);
+        for (int j = 0; j < NUM_TERMINALS; j++) {
+            if (parsingTable[i][j] != -1) {
+                printf("%d\t", parsingTable[i][j]);
+            } else {
+                printf("-\t");
+            }
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
